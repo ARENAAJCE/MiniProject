@@ -353,7 +353,7 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
                       controller: rentalcontrolller,
                       decoration: const InputDecoration(
                           prefixIcon: Icon(
-                            Icons.attach_money,
+                            Icons.currency_rupee_sharp,
                           ),
                           isDense: true,
                           contentPadding: EdgeInsets.all(14),
