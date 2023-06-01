@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+import '../loginandsignup/login.dart';
+
 // class ProfileInfo extends StatefulWidget {
 //   const ProfileInfo({super.key});
 
@@ -106,8 +108,15 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               icon: const Icon(Icons.edit)),
           IconButton(
-              onPressed: () {
-                AuthServices.signout();
+              onPressed: () async {
+                final res = await AuthServices.signout();
+                if (res == null) {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const LoginScreen()));
+                } else {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: res));
+                }
               },
               icon: const Icon(Icons.logout))
         ],
@@ -233,12 +242,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 fontSize: 16,
               ),
             ),
-            const Text(
-              'Owner: Government of Kerala',
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
+            // const Text(
+            //   'Owner: Government of Kerala',
+            //   style: TextStyle(
+            //     fontSize: 16,
+            //   ),
+            // ),
             Text(
               'Facilities : $facilities',
               style: const TextStyle(

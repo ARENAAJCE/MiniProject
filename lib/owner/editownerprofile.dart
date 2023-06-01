@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:devu/profile.dart';
+import 'package:devu/owner/editstadiumdetails.dart';
 import 'package:devu/resources/store.dart';
 import 'package:devu/resources/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -268,108 +268,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                               borderSide: BorderSide(
                                   color: Color.fromARGB(255, 64, 116, 220)))),
                     ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      minLines: 1,
-                      maxLines: 3,
-                      controller: addresscontrolller,
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.home,
-                          ),
-                          isDense: true,
-                          contentPadding: EdgeInsets.all(14),
-                          label: Text('Address'),
-                          fillColor: Color.fromARGB(120, 255, 255, 255),
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 255, 255, 255))),
-                          errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 64, 116, 220))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 64, 116, 220)))),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: capacitycontrolller,
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.groups,
-                          ),
-                          isDense: true,
-                          contentPadding: EdgeInsets.all(14),
-                          label: Text('Capacity'),
-                          fillColor: Color.fromARGB(120, 255, 255, 255),
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 255, 255, 255))),
-                          errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 64, 116, 220))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 64, 116, 220)))),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      minLines: 1,
-                      maxLines: 3,
-                      controller: facilitiescontrolller,
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.forum,
-                          ),
-                          isDense: true,
-                          contentPadding: EdgeInsets.all(14),
-                          label: Text('Facilities'),
-                          fillColor: Color.fromARGB(120, 255, 255, 255),
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 255, 255, 255))),
-                          errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 64, 116, 220))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 64, 116, 220)))),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      minLines: 1,
-                      maxLines: 3,
-                      controller: rentalcontrolller,
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.attach_money,
-                          ),
-                          isDense: true,
-                          contentPadding: EdgeInsets.all(14),
-                          label: Text('Rental Charges'),
-                          fillColor: Color.fromARGB(120, 255, 255, 255),
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 255, 255, 255))),
-                          errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 64, 116, 220))),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 64, 116, 220)))),
-                    ),
+                    //
                   ],
                 ),
               ),
@@ -402,10 +301,10 @@ class _ProfileInformationState extends State<ProfileInformation> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ProfilePage()),
+                          builder: (context) => const ProfileNewInfo()),
                     );
                   },
-                  child: const Text('Save'),
+                  child: const Text('NEXT'),
                 ),
               ),
             ],

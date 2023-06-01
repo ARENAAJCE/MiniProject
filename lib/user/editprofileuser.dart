@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devu/resources/store.dart';
 import 'package:devu/resources/utils.dart';
+import 'package:devu/user/searchpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -212,11 +213,11 @@ class _ProfileUserState extends State<ProfileUser> {
                       "email": emailcontrolller.text.trim(),
                     },
                   );
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  // //       builder: (context) => const SearchScreen()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                         builder: (context) => const SearchScreen()),
+                  );
                 },
                 child: const Text('Save'),
               ),
