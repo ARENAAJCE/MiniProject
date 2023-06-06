@@ -165,6 +165,9 @@ class BookNowPage extends StatelessWidget {
             final address = stadiumData['Address'] ?? 'Unknown Address';
             final facilities = stadiumData['Facilities'] ?? 'Unknown Facilities';
             final rentalCharges = stadiumData['Rental Charges'] ?? 'Unknown Rental Charges';
+            final capacity = stadiumData['Capacity'] ?? 'Unknown Capacity';
+            final phone = stadiumData['phone'] ?? 'Unknown Phone';
+            final email = stadiumData['email'] ?? 'Unknown Email';
 
             return SingleChildScrollView(
               child: Column(
@@ -192,60 +195,35 @@ class BookNowPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 16.0),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      'Owner: $owner',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      'Address: $address',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      'Facilities: $facilities',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      'Rental Charges: $rentalCharges',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  buildInfoBox('Owner', owner),
                   SizedBox(height: 16.0),
-                  Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => BookingsPage(name: name)),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.black, // Set button color to black
+                  buildInfoBox('Address', address),
+                  SizedBox(height: 16.0),
+                  buildInfoBox('Facilities', facilities),
+                  SizedBox(height: 16.0),
+                  buildInfoBox('Rental Charges', rentalCharges),
+                  SizedBox(height: 16.0),
+                  buildInfoBox('Capacity', capacity),
+                  SizedBox(height: 16.0),
+                  buildInfoBox('Phone', phone),
+                  SizedBox(height: 16.0),
+                  buildInfoBox('Email', email),
+                  SizedBox(height: 16.0),
+                  Center( // Center the button
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => BookingsPage(name: name)),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.black, // Set button color to black
+                        ),
+                        child: Text('Book Now'),
                       ),
-                      child: Text('Book Now'),
                     ),
                   ),
                 ],
@@ -253,6 +231,38 @@ class BookNowPage extends StatelessWidget {
             );
           }
         },
+      ),
+    );
+  }
+
+  Widget buildInfoBox(String title, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 4.0),
+            padding: EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
