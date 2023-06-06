@@ -117,7 +117,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       errorBorder: InputBorder.none,
                       border: InputBorder.none,
                       focusedBorder: InputBorder.none,
-                      hintText: 'Enter Stadium name',
+                      hintText: 'Enter Location',
                     ),
                   ),
                 ),
