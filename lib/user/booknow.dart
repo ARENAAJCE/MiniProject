@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'bookings.dart';
+import 'bookticket.dart';
 
 class SearchResultPage extends StatelessWidget {
   @override
@@ -146,7 +147,7 @@ class BookNowPage extends StatelessWidget {
       ),
       body: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
         future: FirebaseFirestore.instance
-            .collection('users')
+            .collection('owners')
             .where('Stadium Name', isEqualTo: name)
             .get(),
         builder: (context, snapshot) {
@@ -163,6 +164,7 @@ class BookNowPage extends StatelessWidget {
               child: Text('No data found'),
             );
           } else {
+          
             final stadiumData = snapshot.data!.docs[0].data();
             final owner = stadiumData['username'] ?? 'Unknown Owner';
             final address = stadiumData['Address'] ?? 'Unknown Address';
@@ -217,10 +219,10 @@ class BookNowPage extends StatelessWidget {
                       padding: EdgeInsets.all(16.0),
                       child: ElevatedButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => book(id: owner,)),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Bookticket(name:name ,)),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.black, // Set button color to black

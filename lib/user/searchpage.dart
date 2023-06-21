@@ -3,6 +3,7 @@ import 'package:devu/about.dart';
 import 'package:devu/firebase/auth_services.dart';
 import 'package:devu/loginandsignup/filestorage.dart';
 import 'package:devu/loginandsignup/login.dart';
+import 'package:devu/user/booknow.dart';
 import 'package:devu/user/editprofileuser.dart';
 import 'package:devu/user/mybookings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -254,11 +255,19 @@ class _SearchScreenState extends State<SearchScreen> {
                       onTap: () {
                         name = (snapshot.data! as dynamic).docs[index]['Stadium Name'];
                         //superid = (snapshot.data! as dynamic).docs[index]['uid'];
-                        Navigator.of(context).push(
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (ctx) => Bookticket(
+                        //         name: (snapshot.data! as dynamic).docs[index]
+                        //             ['Stadium Name']),
+                        //   ),
+                        // );
+                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (ctx) => Bookticket(
+                            builder: (ctx) => BookNowPage(
                                 name: (snapshot.data! as dynamic).docs[index]
-                                    ['Stadium Name']),
+                                    ['Stadium Name'],image: (snapshot.data! as dynamic).docs[index]
+                                    ['stadiumImage'],),
                           ),
                         );
                       },
