@@ -1,8 +1,9 @@
-import 'package:devu/owner/editownerprofile.dart';
 import 'package:devu/user/searchpage.dart';
 import 'package:flutter/material.dart';
 
 import '../firebase/auth_services.dart';
+import '../owner/bookingrequests.dart';
+import 'filestorage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,8 +13,17 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final SecureStorage secureStorage = SecureStorage();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   secureStorage.readSecureData('uploadStaff').then((value) {
+  //     finalupdate = value;
+  //   });
+  // }
 
   _loginUser() async {
     String email = _usernameController.text.trim();
@@ -29,10 +39,14 @@ class _LoginScreenState extends State<LoginScreen> {
     Widget? page;
     switch (role.toUpperCase()) {
       case 'USER':
+        secureStorage.writeSecureData('email', email);
+        secureStorage.writeSecureData('role', role);
         page = const SearchScreen();
         break;
       case 'OWNER':
-        page = const ProfileInformation();
+        secureStorage.writeSecureData('email', email);
+        secureStorage.writeSecureData('role', role);
+        page = const Bookingrequestscreen();
         break;
       default:
         ScaffoldMessenger.of(context)
@@ -150,16 +164,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: Color.fromARGB(255, 15, 127, 101)),
                               ),
                             ),
-                            TextButton(
-                                onPressed: () {},
-                                child: const Text(
-                                  'Forgot Password?',
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    color: Color.fromARGB(255, 15, 127, 101),
-                                    fontSize: 18,
-                                  ),
-                                )),
                           ],
                         )
                       ],

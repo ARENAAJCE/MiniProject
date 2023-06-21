@@ -1,7 +1,12 @@
-
 import 'dart:async';
+import 'package:devu/loginandsignup/filestorage.dart';
+import 'package:devu/owner/editownerprofile.dart';
+import 'package:devu/user/searchpage.dart';
 import 'package:flutter/material.dart';
 import 'package:devu/loginandsignup/login.dart';
+
+String? finalEmail;
+String? finalRole;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -11,12 +16,34 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final SecureStorage secureStorage = SecureStorage();
+
   @override
   void initState() {
+    secureStorage.readSecureData('email').then((value) {
+      finalEmail = value;
+    });
+    secureStorage.readSecureData('role').then((value) {
+      finalRole = value;
+    });
     super.initState();
     Timer(const Duration(seconds: 5), () {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
+      if (finalEmail == null) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
+      } else if (finalEmail != null && finalRole.toString() == "USER") {
+        {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const SearchScreen()));
+        }
+      } else if (finalEmail != null && finalRole.toString() == "OWNER") {
+        {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ProfileInformation()));
+        }
+      }
     });
   }
 

@@ -45,6 +45,7 @@ class _ProfileUserState extends State<ProfileUser> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
     setState(() {
+      image = (snap.data() as Map<String, dynamic>)['imageLink'];
       emailcontrolller.text = (snap.data() as Map<String, dynamic>)['email'];
       namecontrolller.text = (snap.data() as Map<String, dynamic>)['username'];
       phonecontrolller.text = (snap.data() as Map<String, dynamic>)['phone'];
@@ -216,7 +217,7 @@ class _ProfileUserState extends State<ProfileUser> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                         builder: (context) => const SearchScreen()),
+                        builder: (context) => const SearchScreen()),
                   );
                 },
                 child: const Text('Save'),

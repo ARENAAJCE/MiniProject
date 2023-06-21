@@ -22,13 +22,21 @@ class AuthServices {
       res = "Success";
 
       print(cred.user!.uid);
-
-      await _firestore.collection('users').doc(cred.user!.uid).set({
-        'email': email,
-        'uid': cred.user!.uid,
-        'username': username,
-        'role': role
-      });
+      if (role == 'USER') {
+        await _firestore.collection('users').doc(cred.user!.uid).set({
+          'email': email,
+          'uid': cred.user!.uid,
+          'username': username,
+          'role': role
+        });
+      } else if (role == 'OWNER') {
+        await _firestore.collection('owners').doc(cred.user!.uid).set({
+          'email': email,
+          'uid': cred.user!.uid,
+          'username': username,
+          'role': role
+        });
+      }
     } catch (e) {
       res = e.toString();
     }
@@ -39,15 +47,18 @@ class AuthServices {
   static Future<String> login(
       {required String email, required String password}) async {
     String res = "Something went wrong";
+    print('hello');
     try {
+      print('hi');
       UserCredential cred = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       final role = await getrole();
       res = role;
+      print(res);
     } catch (e) {
       res = e.toString();
     }
-
+    print(res);
     return res;
   }
 
@@ -56,8 +67,11 @@ class AuthServices {
     try {
       String uid = _firebaseAuth.currentUser!.uid;
       final data = await firestore.collection('users').doc(uid).get();
+      final data1 = await firestore.collection('owners').doc(uid).get();
       if (data.data() != null) {
         res = data.data()!['role'];
+      } else if (data1.data() != null) {
+        res = data1.data()!['role'];
       }
     } catch (e) {
       res = e.toString();

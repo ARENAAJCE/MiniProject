@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devu/about.dart';
 import 'package:devu/firebase/auth_services.dart';
+import 'package:devu/loginandsignup/filestorage.dart';
 import 'package:devu/loginandsignup/login.dart';
 import 'package:devu/user/editprofileuser.dart';
+import 'package:devu/user/mybookings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:devu/user/searchresult.dart';
-
 import 'package:flutter/material.dart';
+
+import 'bookticket.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -17,6 +19,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final SecureStorage secureStorage = SecureStorage();
   String email = "";
   String name = "";
   String fieldname = "";
@@ -52,6 +55,7 @@ class _SearchScreenState extends State<SearchScreen> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
     setState(() {
+      image = (snap.data() as Map<String, dynamic>)['stadiumImage'];
       email = (snap.data() as Map<String, dynamic>)['email'];
       name = (snap.data() as Map<String, dynamic>)['username'];
 
@@ -62,77 +66,36 @@ class _SearchScreenState extends State<SearchScreen> {
   bool isSearching = false;
   List<String> nameCheck = [];
   List<String> nameList = [];
-  final TextEditingController _textEditingController =
-      TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
 
   final List<String> _dataList = [];
   final List<String> _searchResult = [];
 
   final TextEditingController _searchController = TextEditingController();
-
+  String? valuechoose;
+  final List<String> selectList = [
+    'Thiruvananthapuram',
+    'Kollam',
+    'Pathanamthitta',
+    'Alappuzha',
+    'Kottayam',
+    'Ernakulam',
+    'Idukki',
+    'Malappuram',
+    'Kozhikode',
+    'Kannur',
+    'Palakkad',
+    'Thrissur',
+    'Kasaragod'
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        toolbarHeight: 60,
-        backgroundColor: Colors.black,
-        title: !isSearching
-            ? Padding(
-                padding: const EdgeInsets.only(left: 30),
-                child: Row(
-                  children: const [
-                    Text(
-                      'ARENA',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
-                height: 35,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                  ),
-                  child: TextField(
-                    onChanged: (value) {
-                      setState(() {
-                        nameCheck = nameList
-                            .where((element) => element
-                                .toLowerCase()
-                                .contains(value.toLowerCase()))
-                            .toList();
-                      });
-                    },
-                    controller: _textEditingController,
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintText: 'Enter Location',
-                    ),
-                  ),
-                ),
-              ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                isSearching = !isSearching;
-              });
-            },
-            icon: const Icon(Icons.search),
-          ),
-        ],
-      ),
+          toolbarHeight: 60,
+          backgroundColor: Colors.black,
+          title: const Text('ARENA')),
       drawer: Drawer(
         backgroundColor: Colors.white,
         child: ListView(
@@ -142,7 +105,8 @@ class _SearchScreenState extends State<SearchScreen> {
               decoration: const BoxDecoration(color: Colors.black),
               accountName: Text(
                 name.toUpperCase(),
-                style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                style:
+                    const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
               ),
               accountEmail: Text(email),
               currentAccountPicture: Row(
@@ -157,17 +121,17 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('HOME'),
-              onTap: () {
-                Navigator.pop(context); // close the drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SearchScreen()),
-                );
-              },
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.home),
+            //   title: const Text('HOME'),
+            //   onTap: () {
+            //     Navigator.pop(context); // close the drawer
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => const SearchScreen()),
+            //     );
+            //   },
+            // ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('EDIT PROFILE'),
@@ -176,6 +140,18 @@ class _SearchScreenState extends State<SearchScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ProfileUser()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.book_online),
+              title: const Text('MY BOOKINGS'),
+              onTap: () {
+                Navigator.pop(context); // close the drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Mybookingscreen()),
                 );
               },
             ),
@@ -194,51 +170,141 @@ class _SearchScreenState extends State<SearchScreen> {
               leading: const Icon(Icons.exit_to_app),
               title: const Text('LOGOUT'),
               onTap: () async {
+                secureStorage.deleteSecureData('email');
+                secureStorage.deleteSecureData("Role");
                 final res = await AuthServices.signout();
                 if (res == null) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => const LoginScreen(),
                   ));
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: res));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: res));
                 }
               },
             ),
           ],
         ),
       ),
-      body: Stack(
+      body: Column(
         children: [
-          _searchResult.isNotEmpty || _searchController.text.isNotEmpty
-              ? ListView.builder(
-                  itemCount: _searchResult.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(_searchResult[index]),
-                    );
-                  },
-                )
-              : ListView.builder(
-                  itemCount: _dataList.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(_dataList[index]),
-                    );
-                  },
-                ),
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchResultPage()),
-                );
-              },
-              child: const Icon(Icons.search),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
+              child: DropdownButtonFormField(
+                  hint: const Text(
+                    'Search by District',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  style: const TextStyle(color: Colors.black),
+                  itemHeight: 50,
+                  decoration: const InputDecoration(
+                    focusedBorder:
+                        UnderlineInputBorder(borderSide: BorderSide.none),
+                    // border: OutlineInputBorder(
+                    //     borderRadius:
+                    //         BorderRadius.all(Radius.circular(15))),
+                    // enabledBorder: OutlineInputBorder(
+                    //     borderRadius:
+                    //         BorderRadius.all(Radius.circular(10))),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                  focusColor: Colors.white,
+                  value: valuechoose,
+                  onTap: () {},
+                  items: selectList
+                      .map((e) => DropdownMenuItem(
+                            value: e,
+                            child: Text(e),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      valuechoose = value as String;
+                      print(valuechoose);
+                    });
+                  }),
             ),
           ),
+          const SizedBox(
+            height: 15,
+          ),
+          Expanded(
+              child: FutureBuilder(
+            future: FirebaseFirestore.instance
+                .collection('owners')
+                .where(
+                  'District',
+                  isEqualTo: valuechoose,
+                )
+                .get(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return ListView.builder(
+                itemCount: (snapshot.data! as dynamic).docs.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                      onTap: () {
+                        name = (snapshot.data! as dynamic).docs[index]['Stadium Name'];
+                        //superid = (snapshot.data! as dynamic).docs[index]['uid'];
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => Bookticket(
+                                name: (snapshot.data! as dynamic).docs[index]
+                                    ['Stadium Name']),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          StadiumCard(
+                              name: (snapshot.data! as dynamic)
+                                  .docs[index]['Stadium Name']
+                                  .toString(),
+                              details: (snapshot.data! as dynamic)
+                                  .docs[index]['Rental Charges']
+                                  .toString(),
+                              image: (snapshot.data! as dynamic).docs[index]
+                                  ['imageLink']),
+                          const SizedBox(
+                            height: 15,
+                          )
+                        ],
+                      )
+                      // ListTile(
+                      //   leading: (snapshot.data! as dynamic).docs[index]
+                      //               ['imageLink'] ==
+                      //           null
+                      //       ? const CircleAvatar(
+                      //           backgroundImage: NetworkImage('image/png;base64,'),
+                      //           radius: 16,
+                      //         )
+                      //       : CircleAvatar(
+                      //           backgroundImage: NetworkImage(
+                      //             (snapshot.data! as dynamic).docs[index]
+                      //                 ['imageLink'],
+                      //           ),
+                      //           radius: 16,
+                      //         ),
+                      //   title: Text(
+                      //     (snapshot.data! as dynamic)
+                      //         .docs[index]['Stadium Name']
+                      //         .toString()
+                      //         .toUpperCase(),
+                      //   ),
+                      // ),
+                      );
+                },
+              );
+            },
+          )),
         ],
       ),
     );
@@ -313,13 +379,15 @@ class UserBox extends StatelessWidget {
 }
 
 class SportsNewsWidget extends StatelessWidget {
+  const SportsNewsWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 200,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: [
+        children: const [
           SportsNewsItem(
             imageUrl: 'https://example.com/image1.jpg',
             title: 'Sports News 1',
@@ -353,7 +421,7 @@ class SportsNewsItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 200,
-      margin: EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         children: [
           Container(
@@ -367,10 +435,10 @@ class SportsNewsItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             title,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
         ],
@@ -380,7 +448,84 @@ class SportsNewsItem extends StatelessWidget {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: SearchScreen(),
   ));
+}
+
+class StadiumCard extends StatelessWidget {
+  final String name;
+  final String details;
+  final String image;
+
+  const StadiumCard({
+    super.key,
+    required this.name,
+    required this.details,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0), // Rounded corners
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            offset: const Offset(0, 2),
+            blurRadius: 4.0,
+          ),
+        ],
+      ),
+      child: Card(
+        elevation: 0.0, // Set elevation to 0 to prevent double shadows
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0), // Rounded corners
+        ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(8.0)),
+              child: Image.network(
+                image,
+                fit: BoxFit.cover,
+                height: 200.0,
+                width: double.infinity,
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      details,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

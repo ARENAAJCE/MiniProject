@@ -1,8 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:devu/owner/profile.dart';
+import 'package:devu/owner/bookingrequests.dart';
 import 'package:devu/resources/store.dart';
+import 'package:devu/resources/storepic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
   TextEditingController rentalcontrolller = TextEditingController();
   TextEditingController stadiumcontrolller = TextEditingController();
   TextEditingController capacitycontrolller = TextEditingController();
+  TextEditingController districtcontroller = TextEditingController();
 
   // String email = "";
   // String name = "";
@@ -49,7 +51,7 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
 
   getname() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('owners')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
     setState(() {
@@ -67,6 +69,7 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
           (snap.data() as Map<String, dynamic>)['Facilities'];
       rentalcontrolller.text =
           (snap.data() as Map<String, dynamic>)['Rental Charges'];
+      valuechoose = (snap.data() as Map<String, dynamic>)['District'];
       // phonecontrolller.text = (snap.data() as Map<String, dynamic>)['phone'];
     });
   }
@@ -79,13 +82,29 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
 
   getdata() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('owners')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
     setState(() {
-       image = (snap.data() as Map<String, dynamic>)['imageLink'];
+      image = (snap.data() as Map<String, dynamic>)['imageLink'];
     });
   }
+
+  void saveprofile1() async {
+    String resp = await Storepicdata().addImage(file: _image!);
+  }
+
+  final storage1 = FirebaseStorage.instance;
+
+  // getdata1() async {
+  //   DocumentSnapshot snap = await FirebaseFirestore.instance
+  //       .collection('owners')
+  //       .doc(FirebaseAuth.instance.currentUser!.uid)
+  //       .get();
+  //   setState(() {
+  //     image = (snap.data() as Map<String, dynamic>)['imageLink1'];
+  //   });
+  // }
 
   @override
   void initState() {
@@ -95,6 +114,22 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
     getdata();
   }
 
+  String? valuechoose;
+  final List<String> selectList = [
+    'Thiruvananthapuram',
+    'Kollam',
+    'Pathanamthitta',
+    'Alapuzha',
+    'Kottayam',
+    'Ernakulam',
+    'Idukki',
+    'Malapuram',
+    'Kozhikode',
+    'Kannur',
+    'Palakkad',
+    'Thrissur',
+    'Kasargod'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -117,136 +152,11 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
               const SizedBox(
                 height: 10,
               ),
-              Stack(
-                children: const [
-                  //     _image == null
-                  //         ? Container(
-                  //             height: 100,
-                  //             width: 100,
-                  //             decoration: BoxDecoration(
-                  //                 image: DecorationImage(
-                  //                     image: NetworkImage(image),
-                  //                     fit: BoxFit.cover),
-                  //                 borderRadius:
-                  //                     const BorderRadius.all(Radius.circular(100))),
-                  //           )
-                  //         : CircleAvatar(
-                  //             radius: 45,
-                  //             backgroundImage: MemoryImage(_image!),
-                  //           ),
-                  //     Positioned(
-                  //         top: 50,
-                  //         left: 55,
-                  //         child: IconButton(
-                  //             onPressed: () async {
-                  //               // ImagePicker imagePicker = ImagePicker();
-                  //               // XFile? file = await imagePicker.pickImage(
-                  //               //     source: ImageSource.gallery);
-                  //               selectImage();
-                  //             },
-                  //             icon: const Icon(Icons.add_a_photo)))
-                ],
-              ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    //       TextFormField(
-                    //         controller: namecontrolller,
-                    //         decoration: const InputDecoration(
-                    //             prefixIcon: Icon(Icons.person),
-                    //             isDense: true,
-                    //             contentPadding: EdgeInsets.all(14),
-                    //             label: Text('User Name'),
-                    //             fillColor: Color.fromARGB(120, 255, 255, 255),
-                    //             filled: true,
-                    //             border: OutlineInputBorder(
-                    //                 borderRadius:
-                    //                     BorderRadius.all(Radius.circular(20)),
-                    //                 borderSide: BorderSide(
-                    //                     color: Color.fromARGB(255, 255, 255, 255))),
-                    //             errorBorder: OutlineInputBorder(
-                    //                 borderSide: BorderSide(
-                    //                     color: Color.fromARGB(255, 64, 116, 220))),
-                    //             focusedBorder: OutlineInputBorder(
-                    //                 borderSide: BorderSide(
-                    //                     color: Color.fromARGB(255, 64, 116, 220)))),
-                    //       ),
-                    //       const SizedBox(height: 10),
-                    //       TextFormField(
-                    //         minLines: 1,
-                    //         maxLines: 4,
-                    //         controller: aboutmecontrolller,
-                    //         decoration: const InputDecoration(
-                    //             prefixIcon: Icon(
-                    //               Icons.comment,
-                    //             ),
-                    //             isDense: true,
-                    //             contentPadding: EdgeInsets.all(14),
-                    //             label: Text('About Me'),
-                    //             fillColor: Color.fromARGB(120, 255, 255, 255),
-                    //             filled: true,
-                    //             border: OutlineInputBorder(
-                    //                 borderRadius:
-                    //                     BorderRadius.all(Radius.circular(20)),
-                    //                 borderSide: BorderSide(
-                    //                     color: Color.fromARGB(255, 255, 255, 255))),
-                    //             errorBorder: OutlineInputBorder(
-                    //                 borderSide: BorderSide(
-                    //                     color: Color.fromARGB(255, 64, 116, 220))),
-                    //             focusedBorder: OutlineInputBorder(
-                    //                 borderSide: BorderSide(
-                    //                     color: Color.fromARGB(255, 64, 116, 220)))),
-                    //       ),
-                    // const SizedBox(height: 10),
-                    // TextFormField(
-                    //   controller: phonecontrolller,
-                    //   decoration: const InputDecoration(
-                    //       prefixIcon: Icon(
-                    //         Icons.phone,
-                    //       ),
-                    //       isDense: true,
-                    //       contentPadding: EdgeInsets.all(14),
-                    //       label: Text('Contact no.'),
-                    //       fillColor: Color.fromARGB(120, 255, 255, 255),
-                    //       filled: true,
-                    //       border: OutlineInputBorder(
-                    //           borderRadius:
-                    //               BorderRadius.all(Radius.circular(20)),
-                    //           borderSide: BorderSide(
-                    //               color: Color.fromARGB(255, 255, 255, 255))),
-                    //       errorBorder: OutlineInputBorder(
-                    //           borderSide: BorderSide(
-                    //               color: Color.fromARGB(255, 64, 116, 220))),
-                    //       focusedBorder: OutlineInputBorder(
-                    //           borderSide: BorderSide(
-                    //               color: Color.fromARGB(255, 64, 116, 220)))),
-                    // ),
-                    // const SizedBox(height: 10),
-                    // TextFormField(
-                    //   controller: emailcontrolller,
-                    //   decoration: const InputDecoration(
-                    //       prefixIcon: Icon(
-                    //         Icons.email,
-                    //       ),
-                    //       isDense: true,
-                    //       contentPadding: EdgeInsets.all(14),
-                    //       label: Text('Email'),
-                    //       fillColor: Color.fromARGB(120, 255, 255, 255),
-                    //       filled: true,
-                    //       border: OutlineInputBorder(
-                    //           borderRadius:
-                    //               BorderRadius.all(Radius.circular(20)),
-                    //           borderSide: BorderSide(
-                    //               color: Color.fromARGB(255, 255, 255, 255))),
-                    //       errorBorder: OutlineInputBorder(
-                    //           borderSide: BorderSide(
-                    //               color: Color.fromARGB(255, 64, 116, 220))),
-                    //       focusedBorder: OutlineInputBorder(
-                    //           borderSide: BorderSide(
-                    //               color: Color.fromARGB(255, 64, 116, 220)))),
-                    // ),
-                    // const SizedBox(height: 10),
+                    //
                     TextFormField(
                       controller: stadiumcontrolller,
                       decoration: const InputDecoration(
@@ -296,6 +206,38 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
                               borderSide: BorderSide(
                                   color: Color.fromARGB(255, 64, 116, 220)))),
                     ),
+                    const SizedBox(height: 10),
+                    DropdownButtonFormField(
+                        hint: const Text('Select District'),
+                        style: const TextStyle(color: Colors.black),
+                        itemHeight: 50,
+                        decoration: const InputDecoration(
+                          focusedBorder:
+                              UnderlineInputBorder(borderSide: BorderSide.none),
+                          // border: OutlineInputBorder(
+                          //     borderRadius:
+                          //         BorderRadius.all(Radius.circular(15))),
+                          // enabledBorder: OutlineInputBorder(
+                          //     borderRadius:
+                          //         BorderRadius.all(Radius.circular(10))),
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
+                        focusColor: Colors.white,
+                        value: valuechoose,
+                        onTap: () {},
+                        items: selectList
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            valuechoose = value as String;
+                            print(valuechoose);
+                          });
+                        }),
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: capacitycontrolller,
@@ -372,16 +314,19 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
                               borderSide: BorderSide(
                                   color: Color.fromARGB(255, 64, 116, 220)))),
                     ),
-                    
                   ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20,right: 20),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(onPressed: (){}, child: Text('Upload document')),
-                    ElevatedButton(onPressed: (){}, child: Text('Upload pictures'))
+                    ElevatedButton(
+                        onPressed: () {
+                          selectImage();
+                        },
+                        child: const Text('Upload pictures'))
                   ],
                 ),
               ),
@@ -395,8 +340,9 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
                   ),
                   onPressed: () {
                     saveprofile();
+                    saveprofile1();
                     FirebaseFirestore.instance
-                        .collection('users')
+                        .collection('owners')
                         .doc(FirebaseAuth.instance.currentUser!.uid)
                         .update(
                       {
@@ -408,13 +354,15 @@ class _ProfileNewInfoState extends State<ProfileNewInfo> {
                         "Address": addresscontrolller.text.trim(),
                         "Capacity": capacitycontrolller.text.trim(),
                         "Facilities": facilitiescontrolller.text.trim(),
-                        "Rental Charges": rentalcontrolller.text.trim()
+                        "Rental Charges": rentalcontrolller.text.trim(),
+                        'District': valuechoose,
+                        'owner-id': FirebaseAuth.instance.currentUser!.uid
                       },
                     );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ProfilePage()),
+                          builder: (context) => const Bookingrequestscreen()),
                     );
                   },
                   child: const Text('Save'),

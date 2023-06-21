@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devu/owner/editstadiumdetails.dart';
-import 'package:devu/resources/store.dart';
+import 'package:devu/resources/storeo.dart';
 import 'package:devu/resources/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -48,7 +48,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
 
   getname() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('owners')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
     setState(() {
@@ -71,14 +71,14 @@ class _ProfileInformationState extends State<ProfileInformation> {
   }
 
   void saveprofile() async {
-    String resp = await Storedata().addImage(file: _image!);
+    String resp = await Storedata1().addImage(file: _image!);
   }
 
   final storage = FirebaseStorage.instance;
 
   getdata() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('owners')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
     setState(() {
@@ -283,10 +283,11 @@ class _ProfileInformationState extends State<ProfileInformation> {
                   onPressed: () {
                     saveprofile();
                     FirebaseFirestore.instance
-                        .collection('users')
+                        .collection('owners')
                         .doc(FirebaseAuth.instance.currentUser!.uid)
                         .update(
                       {
+                        // "imageLink":image,
                         "phone": phonecontrolller.text.trim(),
                         "username": namecontrolller.text.trim(),
                         "email": emailcontrolller.text.trim(),

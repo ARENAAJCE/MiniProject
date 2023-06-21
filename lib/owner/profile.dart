@@ -54,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   getdata() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('owners')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
     setState(() {
@@ -64,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   getname() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('owners')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
     setState(() {
@@ -98,28 +98,28 @@ class _ProfilePageState extends State<ProfilePage> {
             color: Colors.white, // Set the heading text color
           ),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ProfileInformation()));
-              },
-              icon: const Icon(Icons.edit)),
-          IconButton(
-              onPressed: () async {
-                final res = await AuthServices.signout();
-                if (res == null) {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const LoginScreen()));
-                } else {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: res));
-                }
-              },
-              icon: const Icon(Icons.logout))
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //                 builder: (context) => const ProfileInformation()));
+        //       },
+        //       icon: const Icon(Icons.edit)),
+        //   IconButton(
+        //       onPressed: () async {
+        //         final res = await AuthServices.signout();
+        //         if (res == null) {
+        //           Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //               builder: (context) => const LoginScreen()));
+        //         } else {
+        //           ScaffoldMessenger.of(context)
+        //               .showSnackBar(SnackBar(content: res));
+        //         }
+        //       },
+        //       icon: const Icon(Icons.logout))
+        // ],
         centerTitle: true,
         backgroundColor: Colors.black, // Set the heading background color
       ),
@@ -164,13 +164,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const Text(
-              'Owner of Stadiums',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey,
-              ),
-            ),
+            // const Text(
+            //   'Owner of Stadiums',
+            //   style: TextStyle(
+            //     fontSize: 15,
+            //     color: Colors.grey,
+            //   ),
+            // ),
             const SizedBox(height: 16.0),
             const Text(
               'About Me:',
